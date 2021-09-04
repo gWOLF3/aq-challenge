@@ -1,0 +1,362 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+  <title data-n-head="true">AQ – Login</title>
+
+<link rel="stylesheet" href="./boiler.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="sha-bundle.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+
+<style>
+
+#body {
+  display: flex;
+  flex-direction: column; /* creates rows out of the elements main and footer */
+  min-height: 80vh;
+}
+
+#signup {
+  line-height: normal;
+  margin-left:auto;
+  border-radius: 30px;
+  padding: 12px 20px;
+  background: #364def;
+  color: white;
+  font-weight: bold;
+  font-size:90%;
+}
+
+#container {
+  height: 100%;
+  min-height: 100%;
+}
+
+.main { 
+  padding: 2%;
+  border: 5px;
+  justify-content: center;
+  border-style: solid;
+  margin: 2% 5%;
+  width: 70%;
+  max-width: 800px;
+  align-self: center;
+}
+
+form {
+  width: 100%;
+  padding: 15px;
+}
+
+.main input {
+  color: black;
+  border-style: solid;
+  background: rgba(0,0,0,0.05);
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 0px;
+  display: flex;
+  flex-grow: 2;
+}
+
+#showpass1, #showpass2, #showpass3 {
+  display: inline-block;
+  float: right;
+  margin:0px;
+  background: rgba(0,0,0,0.05);
+}
+
+
+.oneliner {
+  display: flex;
+  flex-direction: row;
+  margin:0px;
+  padding: 0px; 
+  height: inherit;
+}
+.oneliner button {
+  margin:0px;
+  padding: 0px; 
+  height: inherit;
+}
+
+.main button {
+  padding: 5px 15px;
+  margin-top: 5px;
+  background: rgba(0,0,0,.7);
+  color: white;
+  font-size: small;
+  letter-spacing: 0.4;
+}
+.main label {
+  margin-bottom: 0px;
+  font-size: small;
+  float: left;
+}
+
+
+
+.hidden * {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+
+.postbutton {
+  margin-top: 10px;
+  float: right;
+  font-weight: bold;
+}
+.swapbutton {
+  margin-top: 15px;
+}
+
+
+button:hover {
+  background: rgba(0,0,0,.5);
+}
+
+#dontyou{
+  font-weight: bold;
+  font-size: small;
+  margin: auto;
+}
+.space {
+  width: inherit;
+  margin: auto;
+  margin-top: 20px;
+  display: block;
+  text-align:center;
+}
+
+p {
+  margin: 5px;
+  width: 100%;
+  padding: 0px;
+}
+
+#top{
+  text-align: center;
+  margin-top: 5%;
+  width: 100%
+}
+
+br {
+  margin-bottom: 50px;
+}
+
+#prime {
+  color: rgba(255,255,255,.6);
+  margin: 10px;
+}
+
+</style>
+</head>
+
+<body>
+  <div id=header>
+    <div class=flexer>
+      <a href='https://openinternet.cc'>
+        <img id='headerlogo' src='/aq-logo.svg'>
+      </a>
+    </div>
+  </div>
+<div id=flex-wrap>
+  <div id='body'>
+    <div id=top>
+    </div>
+    <div class=main id='login'>
+      <form method='post'> 
+          <label for'uname'>Email</label> <br>
+          <input placeholder='elon.musk@example.com' id='uname' name='email' type='email' required>
+          <label for 'psw'>Password</label> <br>
+          <div class='oneliner'>
+            <input type='password' id='psw' name='password' required>
+            <button type=button id=showpass3> 👀 </button>
+          </div>
+          <button class='postbutton' id='logbutton' type='button' onclick='sanitizeLoginForm()'>Login</button>
+      </form> 
+        <br>
+        <div class='space'>
+          <p id='dontyou'>Don't have an accout yet? Sign Up for free!</p>
+          <button class='swapbutton' id='regswapbutton' type='submit'>Sign up for free</button>
+        </div>
+    </div>
+    <div class='hidden' id='register'>
+      <form method='post'> 
+          <label for'runame'>Email</label> <br>
+          <input placeholder='elon.musk@example.com' id='runame' name='email' type='email' required>
+          <label for'alias'>Alias</label> <br>
+          <input placeholder='what should we call you? ex: "elon"' id='alias' name='alias' type='text' required>
+            <label for 'createpsw'>Choose Password</label> <br>
+          <div class='oneliner'>
+            <input type='password' id='createpsw' name='password' pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" title='password must contain 6 characters, including uppercase, lowercase and numbers.' required>
+            <button type=button id=showpass1> 👀 </button>
+          </div>
+            <label for 'valpsw'>Verify Password</label> <br>
+          <div class='oneliner'>
+            <input type='password' id='valpsw' onkeyup='valPassword()' required>
+            <button type=button id=showpass2> <span class='trans'> 👀 </span></button>
+          </div>
+          <button class='postbutton' id='regbutton' type='button' onclick='sanitizeRegisterForm()' >Register</button>
+      </form> 
+        <br>
+        <div class='space'>
+          <p id='dontyou'>Already have an account? Login!</p>
+          <button class='swapbutton' id='logswapbutton' type='submit'>Login to my account</button>
+        </div>
+    </div>
+  </div>
+  <footer> 
+  </footer>
+</div>
+</div>
+<% if (typeof emailIsSet !== 'undefined') { %>
+ <script> 
+
+
+    triggerSetLogin = () => {
+      const registerBox2 = document.getElementById('register')
+      const loginBox2 = document.getElementById('login')
+      const heading2 = document.getElementById('heading')
+      const runame = document.getElementById('runame')
+      registerBox2.classList.toggle('main')
+      registerBox2.classList.remove('hidden')
+      loginBox2.classList.remove('main')
+      loginBox2.classList.add('hidden')
+      uname.value = '<%= emailIsSet %>'
+      uname.setAttribute('disabled', true)
+      runame.value = '<%= emailIsSet %>'
+      runame.setAttribute('disabled', true)
+      heading2.innerText = 'Sign up'
+    }
+    triggerSetLogin()
+  </script>
+<% } %> 
+
+
+</body>
+<script>
+
+
+const k = shajs('sha256').update('42').digest('hex')
+
+const registerButton = document.getElementById('regswapbutton')
+const loginButton = document.getElementById('logswapbutton')
+const registerBox = document.getElementById('register')
+const loginBox = document.getElementById('login')
+const heading = document.getElementById('heading')
+const showPass1 = document.getElementById('showpass1')
+const showPass2 = document.getElementById('showpass2')
+const showPass3 = document.getElementById('showpass3')
+const pass1 = document.getElementById('createpsw')
+const pass2 = document.getElementById('valpsw')
+const pass3 = document.getElementById('psw')
+
+const sanitizeRegisterForm = async () => {
+  const url = './register'
+  const data = {
+    password: shajs('sha256').update(pass1.value).digest('hex'),
+    alias: document.getElementById('alias').value,
+    email: document.getElementById('runame').value
+  }
+  try {
+    const response = await fetch(url, 
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+    window.location.reload()
+  } catch(e) {
+    console.error('issue posting register data', e)    
+  }
+}
+
+const sanitizeLoginForm = async () => {
+  const url = './login'
+  const data = {
+    password: shajs('sha256').update(pass3.value).digest('hex'),
+    email: document.getElementById('uname').value
+  }
+  try {
+    const response = await fetch(url, 
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+        redirect: 'follow'
+      })
+    window.location.href = ''
+  } catch(e) {
+    console.error('issue posting register data', e)    
+  }
+}
+
+registerButton.addEventListener('click', () => {
+  console.log('clicked')  
+  registerBox.classList.toggle('main')
+  registerBox.classList.remove('hidden')
+  loginBox.classList.remove('main')
+  loginBox.classList.add('hidden')
+  heading.innerText = 'Sign up'
+})
+loginButton.addEventListener('click', () => {
+  console.log('clicked')  
+  loginBox.classList.toggle('main')
+  loginBox.classList.remove('hidden')
+  registerBox.classList.remove('main')
+  registerBox.classList.add('hidden')
+  heading.innerText = 'Login'
+})
+
+showPass1.addEventListener('click', () => {
+  if ( pass1.type === 'password') {
+    pass1.type = 'text'
+  } else {
+    pass1.type = 'password'
+  }
+})
+
+showPass2.addEventListener('click', () => {
+  if ( pass2.type === 'password') {
+    pass2.type = 'text'
+  } else {
+    pass2.type = 'password'
+  }
+})
+
+showPass3.addEventListener('click', () => {
+  if ( pass3.type === 'password') {
+    pass3.type = 'text'
+  } else {
+    pass3.type = 'password'
+  }
+})
+
+const valPassword = () => {
+  console.log('pass1', pass1.value)
+  console.log('pass2', pass2.value)
+  if (pass1.value === pass2.value) {
+    console.log('isvalid')
+    pass2.setCustomValidity('')
+  } else {
+    pass2.setCustomValidity('passwords must match')
+  }
+}
+
+
+</script>
+<html>

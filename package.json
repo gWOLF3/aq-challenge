@@ -1,10 +1,12 @@
 {
   "name": "aq-challenge",
   "version": "0.0.1",
-  "description": "",
+  "description": "billboard voting challenge for adquick",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pg": "docker run --name pgsql -p 5432:5432 -e POSTGRES_PASSWORD=adquick -e POSTGRES_USER=admin -e POSTGRES_PORT=5432 -e POSTGRES_DB=boards -d postgres",
+    "clean": "docker stop pgsql; docker rm pgsql;",
+    "start": "nodemon index"
   },
   "author": "glenn wolfe",
   "license": "MIT",
@@ -15,6 +17,8 @@
     "ejs": "^3.1.6",
     "envalid": "^7.2.1",
     "express": "^4.17.1",
-    "fs": "0.0.1-security"
+    "fs": "0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "postgres": "^1.0.2"
   }
 }
