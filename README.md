@@ -33,6 +33,7 @@ Here's an outline of what your application should do:
 ### Packages:
 
 #### Backend (NPM)
+- csv-parser
 - jsonwebtoken
 - postgres
 - express

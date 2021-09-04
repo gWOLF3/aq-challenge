@@ -13,6 +13,7 @@
   "dependencies": {
     "axios": "^0.21.3",
     "cookie-parser": "^1.4.5",
+    "csv-parser": "^3.0.0",
     "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
     "envalid": "^7.2.1",
