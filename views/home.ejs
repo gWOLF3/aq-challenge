@@ -53,6 +53,10 @@ div.bl:nth-child(odd) {
   background: rgba(0,0,0,0.04);
 }
 
+#body {
+  padding-top: 5%;
+}
+
 </style>
 </head>
 <body>
@@ -69,6 +73,7 @@ div.bl:nth-child(odd) {
           <% if (typeof boards != 'undefined') { %>
               <% for (board of boards) { %>
                <% if (board.url && board.name) { %>
+                  <div class=bl>
                     <div>
                       <img class='bimg thumbnail' src=<%= board.url %> >
                     </div>
@@ -79,7 +84,6 @@ div.bl:nth-child(odd) {
             <% } %>
           <% } %>
         <% } %>
-      </ul>
     </div>
   </div>
   <footer> 

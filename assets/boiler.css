@@ -44,5 +44,15 @@ p {
   left: 43%;
   top: 13px;
   height: 44px;
+  max-width: 35%;
   width: auto;
+}
+
+@media only screen and (max-width: 58em) {
+  #headerlogo {
+    left: 30%;
+  }
+  #body {
+    padding-top: 50px;
+  }
 }
