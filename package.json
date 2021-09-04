@@ -1,7 +1,7 @@
 {
   "name": "aq-challenge",
   "version": "0.0.1",
-  "description": "billboard voting challenge for adquick",
+  "description": "𓀉 𓀊 𓀋 𓀌 𓀍 𓀎 𓀀 𓀁 𓀂 𓀃 𓀄 𓀅 ",
   "main": "index.js",
   "scripts": {
     "pg": "docker run --name pgsql -p 5432:5432 -e POSTGRES_PASSWORD=adquick -e POSTGRES_USER=admin -e POSTGRES_PORT=5432 -e POSTGRES_DB=boards -d postgres",

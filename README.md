@@ -49,11 +49,9 @@ Here's an outline of what your application should do:
 - jquery
 - shajs
 
-### Other
+### Meta (homebrew on MacOSX)
 - Docker 
-- homebrew (MacOSX)
-
-
+- postbird (for testing)
 
 
 

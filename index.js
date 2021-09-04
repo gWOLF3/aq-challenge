@@ -3,6 +3,7 @@ const envalid = require('envalid')
 const { str, port, bool } = envalid
 const env = envalid.cleanEnv(process.env, {
   LISTEN_PORT: port(),
+  CSV_PATH: str(),
   PGDATABASE: str(),
   PGHOST: str(),
   PGPORT: port(),
@@ -14,6 +15,7 @@ var jwt = require('jsonwebtoken')
 const express = require('express')
 const axios = require('axios')
 const cookieParser = require('cookie-parser')
+const csv = require('csv-parser')
 const fs = require('fs')
 const postgres = require('postgres')
 
@@ -39,9 +41,42 @@ const preparePGDB = async () => {
     email VARCHAR (255) UNIQUE NOT NULL, 
     password VARCHAR (64) NOT NULL,
     alias VARCHAR (40)
+  )`
+
+  await sql`
+  CREATE TABLE IF NOT EXISTS boards (
+    url VARCHAR (500) UNIQUE NOT NULL, 
+    name VARCHAR (255) UNIQUE NOT NULL,
+    total SMALLINT DEFAULT 0 NOT NULL
   )
   `
+  
 }
+
+// init csv data entry
+const migrateData = async () => {
+  await fs
+    .createReadStream(env.CSV_PATH)
+    .pipe(csv())
+    .on('data', function (data) {
+      try {
+        if (data.image && data.name) {
+          console.log('writing csv data:', data)
+          sql`
+            INSERT INTO boards (url, name)
+            VALUES(${data.image}, ${data.name})
+            `
+        } else throw { issue: 'not enough data' }
+      } catch (err) {
+        console.log('err on csv migration', err)
+      }
+    })
+    .on('end', function () {})
+}
+
+
+
+// db helpers
 const registerUser = async (u) => {
   console.log('registerUser', u)
   const [user] = await sql`
@@ -57,13 +92,35 @@ const registerUser = async (u) => {
   `
   return user
 }
-
-// db helpers
 const loadInfo = async (email) => {
   console.log('attempt loadInfo() for', email)
   const [user] = await sql`SELECT * FROM users WHERE email=${email}`
   console.log('successfully found info', user)
   return user
+}
+const loadBoards = async (u) => {
+  console.log('attempt loadBoards()', u)
+  const boards = await sql`SELECT name, url, total FROM boards`
+  for (board of boards) {
+    board.myvote = 0
+    let count = 0
+    if (board.name) {
+      const votes = await sql`
+          SELECT * FROM votes WHERE board=${board.name}
+        `
+      console.log(votes)
+      for (n of votes) {
+        count += n.vote
+        if (u && n.userid == u.userid) {
+          board.myvote = n.vote
+        }
+      }
+      console.log('count real', count)
+      board.total = count
+    }
+  }
+  console.log('boards', boards)
+  return boards
 }
 
 // logout of account and expire the login cookie
@@ -159,6 +216,7 @@ app.get('/', async (req, res) => {
 const start = async () => {
   try {
     await preparePGDB()
+    await migrateData()
     app.listen(env.LISTEN_PORT)
     console.log('app is running on', env.LISTEN_PORT)
   } catch (e) {
