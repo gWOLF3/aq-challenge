@@ -101,24 +101,6 @@ const loadInfo = async (email) => {
 const loadBoards = async (u) => {
   console.log('attempt loadBoards()', u)
   const boards = await sql`SELECT name, url, total FROM boards`
-  for (board of boards) {
-    board.myvote = 0
-    let count = 0
-    if (board.name) {
-      const votes = await sql`
-          SELECT * FROM votes WHERE board=${board.name}
-        `
-      console.log(votes)
-      for (n of votes) {
-        count += n.vote
-        if (u && n.userid == u.userid) {
-          board.myvote = n.vote
-        }
-      }
-      console.log('count real', count)
-      board.total = count
-    }
-  }
   console.log('boards', boards)
   return boards
 }
@@ -199,6 +181,7 @@ app.get('/', async (req, res) => {
       // verify that we signed the JWT
       const decodedJWT = await jwt.verify(req.cookies.jwt, env.JWT_PRIVATE_KEY)
       const r = await loadInfo(decodedJWT.user_email)
+      o.boards = await loadBoards(r)
       o.email = decodedJWT.user_email
       o.alias = r.alias
       res.render('home', o)

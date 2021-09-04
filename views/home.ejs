@@ -22,6 +22,36 @@
   font-weight: bold;
   font-size:90%;
 }
+.stack {
+  flex-direction: column;
+}
+.bimg {
+  max-width: 300px;
+  height: auto;
+  max-height: 200px;
+}
+.bl {
+  width: 100%;
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+  padding: 15px;
+}
+
+.bl * {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.thumbnail {
+  min-height: 100px;
+  height: 150px;
+  width: 200px;
+  overflow: hidden;
+  padding: 10px;
+}
+div.bl:nth-child(odd) {
+  background: rgba(0,0,0,0.04);
+}
 
 </style>
 </head>
@@ -35,6 +65,22 @@
     <button id=logout onclick='window.location.href="/logout"'>Logout</button>
   </div>
   <div id='body'>
+      <div id='boards'>
+          <% if (typeof boards != 'undefined') { %>
+              <% for (board of boards) { %>
+               <% if (board.url && board.name) { %>
+                    <div>
+                      <img class='bimg thumbnail' src=<%= board.url %> >
+                    </div>
+                    <div>
+                      <p> board: <%= JSON.stringify(board.name) %> </p>
+                    </div>
+                  </div>
+            <% } %>
+          <% } %>
+        <% } %>
+      </ul>
+    </div>
   </div>
   <footer> 
   </footer>
