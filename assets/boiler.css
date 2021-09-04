@@ -1,0 +1,48 @@
+*{
+  line-height: 2.54237rem;
+  box-sizing: border-box;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  font-kerning: auto;
+  font-family: Sans-serif;
+  scroll-behavior: smooth;
+  margin: 0px;
+  border: 0px;
+  padding: 0px;
+  font-family: Sans-serif;
+}
+
+p {
+  font-size: 1.27119rem;
+  line-height: 2.0339rem;
+  font-weight: 100;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+
+#header {
+  z-index: 101;
+  width: 100%;
+  height: 70px;
+  background: black;
+  position: fixed;
+  text-align: center;
+  margin: auto;
+  align-items: center;
+  opacity: 1 !important;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,.4);
+  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 10%);
+  padding: 0 2%;
+  display: flex;
+  justify-content: center;
+}
+
+#headerlogo {
+  cursor: pointer;
+  position: absolute;
+  left: 43%;
+  top: 13px;
+  height: 44px;
+  width: auto;
+}

@@ -1,0 +1,20 @@
+{
+  "name": "aq-challenge",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "glenn wolfe",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.3",
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^10.0.0",
+    "ejs": "^3.1.6",
+    "envalid": "^7.2.1",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security"
+  }
+}
