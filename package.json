@@ -6,7 +6,7 @@
   "scripts": {
     "pg": "docker run --name pgsql -p 5432:5432 -e POSTGRES_PASSWORD=adquick -e POSTGRES_USER=admin -e POSTGRES_PORT=5432 -e POSTGRES_DB=boards -d postgres",
     "clean": "docker stop pgsql; docker rm pgsql;",
-    "start": "nodemon index"
+    "start": "node index"
   },
   "author": "glenn wolfe",
   "license": "MIT",

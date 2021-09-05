@@ -16,6 +16,7 @@ npm install
 ```
 3) start db and app
 ```
+npm run clean (optional, only if db needs to be reset)
 npm run pg
 npm run start
 ```
