@@ -48,6 +48,7 @@ Here's an outline of what your application should do:
 - bootstrap
 - jquery
 - shajs
+- glightbox
 
 ### Meta (homebrew on MacOSX)
 - Docker 
