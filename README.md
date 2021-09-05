@@ -1,5 +1,31 @@
 # AdQuick Code Challenge
 
+![adquickdemo](./assets/aq-demo.gif)
+
+## Quickstart
+
+1) install system requirements (homebrew):
+```
+brew --cask install docker
+brew --cask install postbird (testing only)
+```
+2) install node packages
+```
+cd aq-challenge
+npm install
+```
+3) start db and app
+```
+npm run pg
+npm run start
+```
+> NOTE: first time might take a second because it will need to pull Postgres docker image if not present already locally
+
+4) open app and have fun
+```
+open http://localhost:3030
+```
+
 ## Requirements: 
 
 ### Billboard Voting
@@ -19,16 +45,19 @@ Here's an outline of what your application should do:
 - The application should have a README that explains clearly how to set it up and run it. Do us a favor and make setup easy!
 - Note: all code should be written with reasonable performance in mind.
 
-## Techonologies Used:
+
+
+## Technologies Used:
 
 ### Languages:
-- Node JS
+- JS
 - HTML
-- EJS Templates
+- EJS
 - CSS
+- SQL
 
 ### Database
-- PostgreSQL
+- Postgresql
 
 ### Packages:
 
@@ -55,4 +84,11 @@ Here's an outline of what your application should do:
 - postbird (for testing)
 
 
+## Test
 
+### Read/Modify CSV Data
+csv data used in app is stored in `/tests/data.csv`
+```
+// simple read csv 
+node ./tests/csv.js
+```

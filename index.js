@@ -53,7 +53,7 @@ const preparePGDB = async () => {
 
   await sql`
   CREATE TABLE IF NOT EXISTS votes (
-    board VARCHAR (40) NOT NULL, 
+    board VARCHAR (255) NOT NULL, 
     userid SERIAL NOT NULL,
     vote SMALLINT NOT NULL,
     UNIQUE (userid, board),
@@ -172,6 +172,7 @@ app.post('/login', async (req, res) => {
 
 // vote
 app.post('/vote', async (req, res) => {
+  console.log('got vote')
   let o = {}
   if (req.cookies && req.cookies.jwt && req.cookies.jwt !== 'null') {
     try {
@@ -185,6 +186,7 @@ app.post('/vote', async (req, res) => {
               ON CONFLICT (userid, board)
               DO UPDATE SET vote = EXCLUDED.vote;
             `
+          console.log('result', votes)
         } catch (e) {
           console.error('issue while voting', e)
         }

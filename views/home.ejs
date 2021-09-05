@@ -7,11 +7,14 @@
   <title data-n-head="true">AQ – Home</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <link rel="stylesheet" href="./boiler.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
 <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.1/umd/popper.min.js" integrity="sha512-8jeQKzUKh/0pqnK24AfqZYxlQ8JdQjl9gGONwGwKbJiEaAPkD3eoIjz3IuX4IrP+dnxkchGUeWdXLazLHin+UQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
 
 #logout {
@@ -99,6 +102,7 @@ div.bl:nth-child(odd) {
     <button id=logout onclick='window.location.href="/logout"'>Logout</button>
   </div>
   <div id='body'>
+    <a class="show-alert" href=#></a>
     <div id='boards'>
         <% if (typeof boards != 'undefined') { %>
             <% for (board of boards) { %>
@@ -146,7 +150,7 @@ const vote = async (d) => {
     let count = document.getElementById(`${obj.board}-total`).innerText
     document.getElementById(`${obj.board}-total`).innerText = `${parseInt(count) + (parseInt(obj.vote)) }`
     try {
-      const r = await fetch('/vote', 
+      const r = fetch('/vote', 
         {
 
           method: 'POST',
@@ -156,7 +160,10 @@ const vote = async (d) => {
           body: JSON.stringify(obj),
         }
       )
-      console.log('vote succesful', r)
+    bootbox.alert({
+      message: "thanks for voting ✅",
+      backdrop: true 
+    })
     } catch (e) {
       console.error('issue posting vote')
     }
@@ -166,7 +173,7 @@ const vote = async (d) => {
     document.getElementById(obj.board).setAttribute('data-vstatus', '0')                
     obj.vote = '0'
     try {
-      const r = await fetch('/vote', 
+      const r = fetch('/vote', 
         {
 
           method: 'POST',
@@ -176,7 +183,7 @@ const vote = async (d) => {
           body: JSON.stringify(obj),
         }
       )
-      console.log('revert vote succesful', r)
+      console.log('removed vote')
     } catch (e) {
       console.error('issue posting vote')
     }
