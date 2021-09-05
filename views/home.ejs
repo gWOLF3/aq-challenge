@@ -57,6 +57,31 @@ div.bl:nth-child(odd) {
   padding-top: 5%;
 }
 
+.litems {
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-between;
+}
+
+[data-vstatus="1"] > [data-vote="1"] > .bi-arrow-up-square-fill {
+  color: black
+}
+[data-vstatus="1"] > [data-vote="-1"] > .bi-arrow-down-square-fill {
+  color: grey
+}
+[data-vstatus="0"] > * > .bi-arrow-up-square-fill {
+  color: grey
+}
+[data-vstatus="0"] > * > .bi-arrow-down-square-fill {
+  color: grey
+}
+[data-vstatus="-1"] > [data-vote="-1"] > .bi-arrow-down-square-fill {
+  color: black
+}
+[data-vstatus="-1"] > [data-vote="1"] > .bi-arrow-up-square-fill {
+  color: grey
+}
+
 </style>
 </head>
 <body>
@@ -69,24 +94,86 @@ div.bl:nth-child(odd) {
     <button id=logout onclick='window.location.href="/logout"'>Logout</button>
   </div>
   <div id='body'>
-      <div id='boards'>
-          <% if (typeof boards != 'undefined') { %>
-              <% for (board of boards) { %>
-               <% if (board.url && board.name) { %>
-                  <div class=bl>
-                    <div>
-                      <img class='bimg thumbnail' src=<%= board.url %> >
+    <div id='boards'>
+        <% if (typeof boards != 'undefined') { %>
+            <% for (board of boards) { %>
+             <% if (board.url && board.name) { %>
+                <div class=bl>
+                  <div id='<%=board.name%>' class='stack' data-vstatus='<%=board.myvote%>'> 
+                    <div class='button' data-board='<%=board.name%>' data-vote='1' onclick='vote(this);'>
+                      <i id='<%=board.name%>-up' class="bi bi-arrow-up-square-fill"></i>  
                     </div>
-                    <div>
-                      <p> board: <%= JSON.stringify(board.name) %> </p>
+                    <div class='button' data-board='<%=board.name%>' data-vote='-1' onclick="vote(this);">
+                      <i id='<%=board.name%>-down' class="bi bi-arrow-down-square-fill"></i>  
                     </div>
                   </div>
-            <% } %>
+                  <div>
+                    <img class='bimg thumbnail' src=<%= board.url %> >
+                  </div>
+                  <div class='litems'>
+                    <div class>
+                      <h3> <%= board.name.toLowerCase() %> </h3>
+                    </div>
+                    <div>
+                      <h3> <span id='<%=board.name%>-total'> <%= JSON.stringify(board.total)%> </span> </h3>
+                    </div>
+                  </div>
+                </div>
           <% } %>
         <% } %>
-    </div>
+      <% } %>
+    </ul>
   </div>
-  <footer> 
-  </footer>
+<footer> 
+</footer>
 </body>
+<script>
+const vote = async (d) => {
+  let obj = {}
+  obj.board = d.getAttribute('data-board')
+  obj.vote = d.getAttribute('data-vote')
+  const voteStatus = document.getElementById(obj.board).getAttribute('data-vstatus')
+  // only make vote if current vote is zero and changing vote, otherwise 'unvote'
+  if (voteStatus != obj.vote && voteStatus == 0) {
+    document.getElementById(obj.board).setAttribute('data-vstatus', obj.vote)                
+    let count = document.getElementById(`${obj.board}-total`).innerText
+    document.getElementById(`${obj.board}-total`).innerText = `${parseInt(count) + (parseInt(obj.vote)) }`
+    try {
+      const r = await fetch('/vote', 
+        {
+
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(obj),
+        }
+      )
+      console.log('vote succesful', r)
+    } catch (e) {
+      console.error('issue posting vote')
+    }
+  } else {
+    let count = document.getElementById(`${obj.board}-total`).innerText
+    document.getElementById(`${obj.board}-total`).innerText = `${parseInt(count) - (parseInt(voteStatus)) }`
+    document.getElementById(obj.board).setAttribute('data-vstatus', '0')                
+    obj.vote = '0'
+    try {
+      const r = await fetch('/vote', 
+        {
+
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(obj),
+        }
+      )
+      console.log('revert vote succesful', r)
+    } catch (e) {
+      console.error('issue posting vote')
+    }
+  }
+}
+</script>
 </html>

@@ -50,6 +50,17 @@ const preparePGDB = async () => {
     total SMALLINT DEFAULT 0 NOT NULL
   )
   `
+
+  await sql`
+  CREATE TABLE IF NOT EXISTS votes (
+    board VARCHAR (40) NOT NULL, 
+    userid SERIAL NOT NULL,
+    vote SMALLINT NOT NULL,
+    UNIQUE (userid, board),
+    FOREIGN KEY (userid) REFERENCES users(userid),
+    FOREIGN KEY (board) REFERENCES boards(name)
+  )
+  `
   
 }
 
@@ -67,8 +78,8 @@ const migrateData = async () => {
             VALUES(${data.image}, ${data.name})
             `
         } else throw { issue: 'not enough data' }
-      } catch (err) {
-        console.log('err on csv migration', err)
+      } catch (e) {
+        console.error('trouble migrating csv item:', e)
       }
     })
     .on('end', function () {})
@@ -78,7 +89,6 @@ const migrateData = async () => {
 
 // db helpers
 const registerUser = async (u) => {
-  console.log('registerUser', u)
   const [user] = await sql`
     INSERT INTO users (
       email,
@@ -93,15 +103,30 @@ const registerUser = async (u) => {
   return user
 }
 const loadInfo = async (email) => {
-  console.log('attempt loadInfo() for', email)
   const [user] = await sql`SELECT * FROM users WHERE email=${email}`
-  console.log('successfully found info', user)
   return user
 }
 const loadBoards = async (u) => {
-  console.log('attempt loadBoards()', u)
   const boards = await sql`SELECT name, url, total FROM boards`
-  console.log('boards', boards)
+  for (board of boards) {
+    board.myvote = 0
+    let count = 0
+    if (board.name) {
+      const votes = await sql`
+          SELECT * FROM votes WHERE board=${board.name}
+        `
+      for (n of votes) {
+        count += n.vote
+        if (u && n.userid == u.userid) {
+          board.myvote = n.vote
+        }
+      }
+      board.total = count
+    }
+  }
+  //simple order sort
+  boards.sort((a,b) => (a.total < b.total) ? 1 : -1)
+  console.log('sorted boards', boards)
   return boards
 }
 
@@ -145,6 +170,34 @@ app.post('/login', async (req, res) => {
   }
 })
 
+// vote
+app.post('/vote', async (req, res) => {
+  let o = {}
+  if (req.cookies && req.cookies.jwt && req.cookies.jwt !== 'null') {
+    try {
+      const decodedJWT = await jwt.verify(req.cookies.jwt, env.JWT_PRIVATE_KEY)
+      const info = await loadInfo(decodedJWT.user_email)
+      if (req.body && req.body.board && req.body.vote) {
+        try {
+          const votes = await sql`
+              INSERT INTO votes (userid, vote, board)
+              VALUES(${info.userid}, ${req.body.vote}, ${req.body.board}) 
+              ON CONFLICT (userid, board)
+              DO UPDATE SET vote = EXCLUDED.vote;
+            `
+        } catch (e) {
+          console.error('issue while voting', e)
+        }
+      }
+    } catch (e) {
+      console.error('issue while loading user info from jwt', e)
+      o.error = 'session expired. please relogin.'
+    }
+  } else {
+    console.log('request object', req.url)
+  }
+})
+
 // create new account
 app.post('/register', async (req, res) => {
   let o = {}
@@ -180,8 +233,11 @@ app.get('/', async (req, res) => {
     try {
       // verify that we signed the JWT
       const decodedJWT = await jwt.verify(req.cookies.jwt, env.JWT_PRIVATE_KEY)
+      console.log('decoded JWT', decodedJWT)
       const r = await loadInfo(decodedJWT.user_email)
+      console.log('loaded user info', r)
       o.boards = await loadBoards(r)
+      console.log('loaded user board info', o.boards)
       o.email = decodedJWT.user_email
       o.alias = r.alias
       res.render('home', o)
@@ -192,6 +248,24 @@ app.get('/', async (req, res) => {
     }
   } else {
     // no valid JWT, redirect to login
+    res.render('login', o)
+  }
+})
+
+// login
+app.get('/login', async (req, res) => {
+  let o = {}
+  if (req.cookies && req.cookies.jwt && req.cookies.jwt !== 'invalid') {
+    try {
+      const decodedJWT = await jwt.verify(req.cookies.jwt, env.JWT_PRIVATE_KEY)
+      const r = await loadInfo(decodedJWT.user_email)
+      res.redirect('../')
+    } catch (e) {
+      o.error = 'session expired. please relogin.'
+      res.render('login', o)
+    }
+  } else {
+    // redirect to login
     res.render('login', o)
   }
 })
